@@ -48,7 +48,7 @@ const account2 = {
     '2020-07-26T12:01:20.894Z',
   ],
   currency: 'USD',
-  locale: 'en-GB',
+  locale: 'en-US',
 };
 
 const accounts = [account1, account2];
@@ -110,12 +110,7 @@ const displayMovements = function (acct, sort = false) {
 };
 
 function formatMovementDates(date, locale){
-  // const date = new Date(dates);
-  // const month = `${date.getMonth() + 1}`;
-  // const day = `${date.getDate()}`.padStart(2, 0);
-  // const year = `${date.getFullYear()}`;
-  // const hour = `${date.getHours()}`;
-  // const minutes = `${date.getMinutes()}`;
+
 
   return new Intl.DateTimeFormat(locale).format(date);
 }
@@ -185,10 +180,14 @@ const updateUI = function (acc) {
   // Display summary
   calcDisplaySummary(acc);
 };
-
+const resetTimer = function() {
+  clearInterval(timer);
+  timer = startLogoutTimer();
+}
 ///////////////////////////////////////
 // Event handlers
 let currentAccount;
+let timer;
 
 const options = {
   year: 'numeric',
@@ -202,14 +201,6 @@ const options = {
 btnLogin.addEventListener('click', function (e) {
   // Prevent form from submitting
   e.preventDefault();
-  
-  // const now = new Date();
-  // const month = `${now.getMonth() + 1}`;
-  // const day = `${now.getDate()}`.padStart(2, 0);
-  // const year = `${now.getFullYear()}`;
-  // const hour = `${now.getHours()}`.padStart(2,0);
-  // const minutes = `${now.getMinutes()}`.padStart(2,0);
-  // labelDate.textContent = `${month}/${day}/${year}, ${hour > 12 ? hour - 12 : hour == 0 ? hour + 12 : hour}:${minutes}`
   
   currentAccount = accounts.find(
     acc => acc.username === inputLoginUsername.value
@@ -227,7 +218,8 @@ btnLogin.addEventListener('click', function (e) {
       // Clear input fields
       inputLoginUsername.value = inputLoginPin.value = '';
       inputLoginPin.blur();
-      
+      if(timer) clearInterval(timer);
+      timer = startLogoutTimer();
       // Update UI
     updateUI(currentAccount);
   }
@@ -256,6 +248,8 @@ btnTransfer.addEventListener('click', function (e) {
     receiverAcc.movementsDates.push(new Date().toISOString());
     // Update UI
     updateUI(currentAccount);
+    // Reset Timer
+    resetTimer();
   }
 });
 
@@ -274,7 +268,7 @@ btnLoan.addEventListener('click', function (e) {
       updateUI(currentAccount);
       
     },2500)
-    
+    resetTimer();
   }
   inputLoanAmount.value = '';
 });
@@ -313,9 +307,43 @@ btnSort.addEventListener('click', function (e) {
 
 /////////////////////////////////////////////////
 /////////////////////////////////////////////////
-// LECTURES
+// setInterval( () => console.log(new Date()), 1200);
+
+// const clock = setInterval(() => {
+// const date = new Date();
+//   console.clear();
+//   console.log(`Current Time - ${date.getHours() > 12 ? date.getHours() - 12 : date.getHours() === 0 ? date.getHours() + 12 : date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`)
+// },1000)
 
 
+function startLogoutTimer() {
+  //set timer to 5 mins
+  function tick() {
+    const min = `${Math.trunc(time / 60)}`.padStart(2,'0');
+    const seconds = min === '00' ? `${time % 60}`.padStart(2, '0') : `${time % 60}`.padEnd(2, '0');
+    
+
+  //in each call, print the remaining time to the UI
+  labelTimer.textContent = `${min}:${seconds}`.padStart(4,0);
+  // at end of timer, stop timer and log user out
+    if(time === 0) {
+    clearInterval(timer);
+    // Log user out
+    containerApp.style.opacity = 0;
+    containerApp.style.visibility = "hidden";
+    labelWelcome.textContent = 'Log in to get started';
+    currentAccount = null;
+
+    }
+    // decrease 1 second
+    time--;
+  }
+  let time = 300;
+  // call the timer every second
+  tick()
+  const timer = setInterval(tick, 1000);
+  return timer; 
+}
 
 function createRandomInt(min, max) {
  return Math.trunc(Math.random() * (max - min)+ 1) + min

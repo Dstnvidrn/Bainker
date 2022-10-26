@@ -98,7 +98,7 @@ const displayMovements = function (acct, sort = false) {
         <div class="movements__date">
         ${daysAgo === 0 ? 'Today' : daysAgo === 1 ? 'Yesterday' :  daysAgo <= 7 ?  `${daysAgo} days ago` : formatMovementDates(dates[i])}
         </div>
-        <div class="movements__value"><span class="currency-sign">$</span>${mov.toFixed(2)}</div>
+        <div class="movements__value"><span class="currency-sign">$</span>${new Intl.NumberFormat('en-US').format(mov)}</div>
       </div>
     `;
 
@@ -135,7 +135,7 @@ function sortDates(moves,dates) {
 
 const calcDisplayBalance = function (acc) {
   acc.balance = acc.movements.reduce((acc, mov) => acc + mov, 0);
-  labelBalance.textContent = `$${acc.balance.toFixed(2)}`;
+  labelBalance.textContent = new Intl.NumberFormat('en-US').format(acc.balance)
 };
 
 const calcDisplaySummary = function (acc) {
@@ -191,18 +191,19 @@ currentAccount = account1;
 updateUI(currentAccount);
 containerApp.style.opacity = 100;
 containerApp.style.visibility = 'visible'
+labelDate.textContent = new Intl.DateTimeFormat('en-US').format(new Date())
 
 btnLogin.addEventListener('click', function (e) {
   // Prevent form from submitting
   e.preventDefault();
  
-  const now = new Date();
-  const month = `${now.getMonth() + 1}`;
-  const day = `${now.getDate()}`.padStart(2, 0);
-  const year = `${now.getFullYear()}`;
-  const hour = `${now.getHours()}`.padStart(2,0);
-  const minutes = `${now.getMinutes()}`.padStart(2,0);
-  labelDate.textContent = `${month}/${day}/${year}, ${hour > 12 ? hour - 12 : hour == 0 ? hour + 12 : hour}:${minutes}`
+  // const now = new Date();
+  // const month = `${now.getMonth() + 1}`;
+  // const day = `${now.getDate()}`.padStart(2, 0);
+  // const year = `${now.getFullYear()}`;
+  // const hour = `${now.getHours()}`.padStart(2,0);
+  // const minutes = `${now.getMinutes()}`.padStart(2,0);
+  // labelDate.textContent = `${month}/${day}/${year}, ${hour > 12 ? hour - 12 : hour == 0 ? hour + 12 : hour}:${minutes}`
 
   currentAccount = accounts.find(
     acc => acc.username === inputLoginUsername.value

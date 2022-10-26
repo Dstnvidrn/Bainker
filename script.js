@@ -26,7 +26,7 @@ const account1 = {
     '2020-07-11T23:36:17.929Z',
     '2020-07-12T10:51:36.790Z',
   ],
-  currency: 'EUR',
+  currency: 'USD',
   locale: 'pt-PT', // de-DE
 };
 
@@ -98,7 +98,7 @@ const displayMovements = function (acct, sort = false) {
         <div class="movements__date">
         ${daysAgo === 0 ? 'Today' : daysAgo === 1 ? 'Yesterday' :  daysAgo <= 7 ?  `${daysAgo} days ago` : formatMovementDates(dates[i])}
         </div>
-        <div class="movements__value">${mov.toFixed(2)}€</div>
+        <div class="movements__value"><span class="currency-sign">$</span>${mov.toFixed(2)}</div>
       </div>
     `;
 
@@ -135,19 +135,19 @@ function sortDates(moves,dates) {
 
 const calcDisplayBalance = function (acc) {
   acc.balance = acc.movements.reduce((acc, mov) => acc + mov, 0);
-  labelBalance.textContent = `${acc.balance.toFixed(2)}€`;
+  labelBalance.textContent = `$${acc.balance.toFixed(2)}`;
 };
 
 const calcDisplaySummary = function (acc) {
   const incomes = acc.movements
     .filter(mov => mov > 0)
     .reduce((acc, mov) => acc + mov, 0);
-  labelSumIn.textContent = `${incomes}€`;
+  labelSumIn.textContent = `$${incomes}`;
 
   const out = acc.movements
     .filter(mov => mov < 0)
     .reduce((acc, mov) => acc + mov, 0);
-  labelSumOut.textContent = `${+Math.abs(out).toFixed(2)}€`;
+  labelSumOut.textContent = `$${+Math.abs(out).toFixed(2)}`;
 
   const interest = acc.movements
     .filter(mov => mov > 0)
@@ -157,7 +157,7 @@ const calcDisplaySummary = function (acc) {
       return int >= 1;
     })
     .reduce((acc, int) => acc + int, 0);
-  labelSumInterest.textContent = `${+interest.toFixed(2)}€`;
+  labelSumInterest.textContent = `$${+interest.toFixed(2)}`;
 };
 
 const createUsernames = function (accs) {
@@ -195,7 +195,14 @@ containerApp.style.visibility = 'visible'
 btnLogin.addEventListener('click', function (e) {
   // Prevent form from submitting
   e.preventDefault();
-
+ 
+  const now = new Date();
+  const month = `${now.getMonth() + 1}`;
+  const day = `${now.getDate()}`.padStart(2, 0);
+  const year = `${now.getFullYear()}`;
+  const hour = `${now.getHours()}`.padStart(2,0);
+  const minutes = `${now.getMinutes()}`.padStart(2,0);
+  labelDate.textContent = `${month}/${day}/${year}, ${hour > 12 ? hour - 12 : hour == 0 ? hour + 12 : hour}:${minutes}`
 
   currentAccount = accounts.find(
     acc => acc.username === inputLoginUsername.value
@@ -289,13 +296,6 @@ btnSort.addEventListener('click', function (e) {
   sorted = !sorted;
 });
 
-const now = new Date();
-const month = `${now.getMonth() + 1}`;
-const day = `${now.getDate()}`.padStart(2, 0);
-const year = `${now.getFullYear()}`;
-const hour = `${now.getHours()}`.padStart(2,0);
-const minutes = `${now.getMinutes()}`.padStart(2,0);
-labelDate.textContent = `${month}/${day}/${year}, ${hour > 12 ? hour - 12 : hour == 0 ? hour + 12 : hour}:${minutes}`
 // month/day/year
 
 /////////////////////////////////////////////////
@@ -317,7 +317,7 @@ labelDate.textContent = `${month}/${day}/${year}, ${hour > 12 ? hour - 12 : hour
 // console.log(25 ** (1/2));  // Square Root
 // console.log(25 ** (1/3)); // Cube Root
 
-const radius = Math.PI * Number.parseFloat('10px') ** 2;
+// const radius = Math.PI * Number.parseFloat('10px') ** 2;
 // console.log(radius);
 // console.log(Math.trunc(Math.random() * 6) + 1);
 

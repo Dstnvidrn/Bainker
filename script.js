@@ -265,11 +265,16 @@ btnLoan.addEventListener('click', function (e) {
   const amount = Math.trunc(inputLoanAmount.value);
 
   if (amount > 0 && currentAccount.movements.some(mov => mov >= amount * 0.1)) {
+
+    setTimeout( () => {
     // Add movement
-    currentAccount.movements.push(amount);
-    currentAccount.movementsDates.push(new Date().toISOString())
-    // Update UI
-    updateUI(currentAccount);
+      currentAccount.movements.push(amount);
+      currentAccount.movementsDates.push(new Date().toISOString())
+      // Update UI
+      updateUI(currentAccount);
+      
+    },2500)
+    
   }
   inputLoanAmount.value = '';
 });
@@ -312,55 +317,6 @@ btnSort.addEventListener('click', function (e) {
 
 
 
-
-// use Number.isNaN to check if NOT a number NAN
-// console.log(Number.isNaN(+'x32x'))  // True
-
-// use Number.isFinite() to check if IS a number
-// console.log(Number.isFinite(+"23")); // True
-
-// +  before a string of a number converts it to a number
-
-// console.log(Math.sqrt(25));
-// console.log(25 ** (1/2));  // Square Root
-// console.log(25 ** (1/3)); // Cube Root
-
-// const radius = Math.PI * Number.parseFloat('10px') ** 2;
-// console.log(radius);
-// console.log(Math.trunc(Math.random() * 6) + 1);
-
 function createRandomInt(min, max) {
  return Math.trunc(Math.random() * (max - min)+ 1) + min
 }
-
-// 2, 10    10 - 8     2
-
-// console.log(createRandomInt(2,10));
-
-// console.log(Array.from({length: 200}, () => createRandomInt(2, 10)));
-
-function log(input) {
-  // console.log(input)
-}
-log(Math.trunc(23.5));
-log(Math.round(23.5));
-log(Math.floor(23.5));
-log(Math.ceil(23.5));
-
-log(Math.floor(-24.553234)); 
-
-
-log(+23.435.toFixed(4))
-
-
-const isEven = n => n % 2 === 0;
-labelBalance.addEventListener('click', () => 
-[...document.querySelectorAll('.movements__row')].forEach( (row,i) => {
- i % 2 === 0 ? row.style.backgroundColor = 'orangered' : row;
- i % 3 === 0 ? row.style.backgroundColor = 'blue' : row;
-}))
-
-
-
-
-const future = new Date(2023, 6, 23, 11, 15);

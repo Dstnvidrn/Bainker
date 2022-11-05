@@ -31,6 +31,7 @@
     color: #444;
     line-height: 1.9;
     background-color: #f3f3f3;
+
   }
   
   /* GENERAL ELEMENTS */
@@ -672,4 +673,10 @@
     font-size: 1.5rem;
     font-weight: 400;
   }
-  
+   /* SCROLL TO TOP BUTTON */
+   .btn-top {
+
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-end;
+   }
